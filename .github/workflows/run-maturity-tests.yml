@@ -5,7 +5,7 @@ on:
 
 jobs:
   check-has-readme:
-    uses: ./.github/workflows/maturity-tests/check-has-readme.yml
+    uses: ./.github/workflows/check-has-readme.yml
   
   update-port-rank:
     needs: [check-has-readme]
