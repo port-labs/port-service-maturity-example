@@ -30,7 +30,7 @@ jobs:
          clientId: ${{ secrets.PORT_CLIENT_ID }}
          clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
          title: readme
-         blueprint: Service
+         blueprint: CheckRun
          properties: |
            {
               "status": "${{ steps.determine-status.outputs.status }}"
