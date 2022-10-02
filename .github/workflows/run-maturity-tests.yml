@@ -6,22 +6,6 @@ on:
 jobs:
   check-has-readme:
     uses: ./.github/workflows/check-has-readme.yml
-  
-  update-port-rank:
-    needs: [check-has-readme]
-    runs-on: ubuntu-latest
-    steps: 
-      - name: "Update port rank"
-        uses: port-labs/port-github-action@v1
-        with:
-          clientId: ${{ secrets.PORT_CLIENT_ID }}
-          clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
-          identifier: payment-service
-          title: Payment Service
-          blueprint: Service
-          properties: |
-            {
-               "rank": "Bronze"
-            }
-
-
+    secrets: 
+      PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
+      PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}

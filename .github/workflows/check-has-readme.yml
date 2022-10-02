@@ -2,12 +2,40 @@ name: Check if service has readme
 
 on:
   workflow_call:
-
+    secrets: 
+      PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
+      PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
 jobs:
   check-has-readme:
     runs-on: ubuntu-latest
     steps:
      - name: "Check file existence"
+       id: is-readme-exist
        uses: andstor/file-existence-action@v1
        with:
         files: "README.md"
+     - name: "Determine status"
+       id: determine-status
+       run: |
+        if [ "${{ steps.is-readme-exist.outputs.exists }}" = "true" ]; then
+          echo "::set-output name=status::success"
+        else
+          echo "::set-output name=status::failure"
+        fi
+     - name: "Update check run result"
+       uses: port-labs/port-github-action@v1
+       with:
+         clientId: ${{ secrets.PORT_CLIENT_ID }}
+         clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
+         title: readme
+         blueprint: Service
+         properties: |
+           {
+              "status": "${{ steps.determine-status.outputs.status }}"
+           }
+         relations: |
+           {
+             "service": "payment-service",
+             "check": "readme"
+           } 
+        
