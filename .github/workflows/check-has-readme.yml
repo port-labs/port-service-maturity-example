@@ -3,8 +3,10 @@ name: Check if service has readme
 on:
   workflow_call:
     secrets: 
-      PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
-      PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
+      PORT_CLIENT_ID: 
+        required: true
+      PORT_CLIENT_SECRET: 
+        required: true
 jobs:
   check-has-readme:
     runs-on: ubuntu-latest
