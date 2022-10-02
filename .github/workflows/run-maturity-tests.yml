@@ -5,10 +5,10 @@ on:
 
 jobs:
   check-has-readme:
-    uses: ./.github/maturity-tests/check-has-readme.yml
+    uses: ./.github/maturity-tests/check-has-readme.yml@main
   
   update-port-rank:
-    needs: check-has-readme
+    needs: [check-has-readme]
     runs-on: ubuntu-latest
     steps: 
       - name: "Update port rank"
