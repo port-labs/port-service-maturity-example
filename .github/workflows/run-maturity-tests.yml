@@ -47,6 +47,7 @@ jobs:
               ]
             }            
       - name: Get all checks and latest runs on the service
+        id: calculate-final-score-algo
         run: |
           import os
           checks = sorted(${{ steps.search-checks.outputs.entities }}, key=lambda check: check["properties"]["tier"], reverse=True)
@@ -75,5 +76,5 @@ jobs:
             }
           relations: |
             {
-              "rank": "${{ steps.calculate-final-score.outputs.final-rank }}"
+              "rank": "${{ steps.calculate-final-score-algo.outputs.final-rank }}"
             }
