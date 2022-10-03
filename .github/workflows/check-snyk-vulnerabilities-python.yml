@@ -13,10 +13,9 @@ jobs:
   check-has-readme:
     runs-on: ubuntu-latest
     steps:
-     - uses: actions/checkout@master
      - name: Run Snyk to check for vulnerabilities
        id: snyk
-       uses: snyk/actions/python-3.8@master
+       uses: snyk/actions/python@master
        env:
          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
        with:
