@@ -21,10 +21,16 @@ jobs:
     needs: [check-has-readme, check-snyk-vulnerabilities-python]
     runs-on: ubuntu-latest
     steps:
+      - id: search-entities
+        uses: port-labs/port-github-action@v1
+        with:
+          clientId: ${{ secrets.PORT_CLIENT_ID }}
+          clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
+          operation: SEARCH
+          query:  |
+            { "rules": [{ "operator": "=", "value": "Check", "property": "$blueprint"}], "combinator": "and" }
       - name: Get all checks and latest runs on the service
         run: |
-          checks = $(port get check --filter "service.name=payment-service" --fields "name")
-          for check in $checks; do
-            latestRun = $(port get checkrun --filter "check.name=$check" --sort "createdAt" --limit 1 --fields "status")
-            echo "$check: $latestRun"
+          for check in ${{ search-entities.outputs.entities }}; do
+            echo "$check"
           done
