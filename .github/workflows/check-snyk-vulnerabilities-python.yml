@@ -18,6 +18,7 @@ jobs:
      - run: ls -l
      - name: Run Snyk to check for vulnerabilities
        id: snyk
+       continue-on-error: true
        uses: snyk/actions/python@master
        env:
          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
@@ -26,7 +27,7 @@ jobs:
      - name: "Determine status"
        id: determine-status
        run: |
-        if [ "${{ steps.snyk.outputs.pass }}" = "true" ]; then
+        if [ "${{ steps.snyk.outcome }}" = "success" ]; then
           echo "::set-output name=status::success"
         else
           echo "::set-output name=status::failure"
@@ -45,6 +46,6 @@ jobs:
          relations: |
            {
              "service": "payment-service",
-             "check": "readme"
+             "check": "snyk-vulnerabilties"
            } 
         
