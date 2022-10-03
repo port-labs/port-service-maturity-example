@@ -1,0 +1,2 @@
+defaultTitle: "{{ repositoryName }}"
+defaultIdentifier: "{{ repositoryName }}"
