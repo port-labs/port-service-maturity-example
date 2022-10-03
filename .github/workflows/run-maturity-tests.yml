@@ -51,5 +51,5 @@ jobs:
           for check in ${{ steps.search-checks.outputs.entities }}:
             currentCheckCheckRuns = [checkRun for checkRun in ${{ steps.search-check-runs.outputs.entities }} if checkRun.relations.check == check.identifier] 
             latestCheckRun = max(currentCheckCheckRuns, key=lambda checkRun: checkRun.createdAt)
-            echo latestCheckRun
+            print(latestCheckRun)
         shell: python
