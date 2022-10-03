@@ -49,13 +49,30 @@ jobs:
       - name: Get all checks and latest runs on the service
         run: |
           checks = sorted(${{ steps.search-checks.outputs.entities }}, key=lambda check: check["properties"]["tier"], reverse=True)
-          finalTier = checks[0]["properties"]["tier"]
+          finalRank = checks[0]["relations"]["rank"]
           for check in checks:
             currentCheckCheckRuns = [checkRun for checkRun in ${{ steps.search-check-runs.outputs.entities }} if checkRun["relations"]["check"] == check["identifier"]] 
             latestCheckRun = max(currentCheckCheckRuns, key=lambda checkRun: checkRun["createdAt"])
             if latestCheckRun["properties"]["status"] == "success": 
-              finalTier = check["properties"]["tier"]
+              finalRank = check["relations"]["rank"]
             else:
               break
-          print(f'::set-output name=final-tier::{finalTier}')
+          print(f'::set-output name=final-rank::{finalRank}')
         shell: python
+
+      - name: Update service maturity score
+        uses: port-labs/port-github-action@v1
+        with:
+          clientId: ${{ secrets.PORT_CLIENT_ID }}
+          clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
+          identifier: payment-service
+          title: Payment Service
+          blueprint: Service
+          properties: |
+            {
+               "repo": "${{ github.event.repository.name }}"
+            }
+          relations: |
+            {
+              "rank": ${{ steps.calculate-final-score.outputs.final-rank }}
+            }
