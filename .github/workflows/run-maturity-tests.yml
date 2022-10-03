@@ -45,7 +45,7 @@ jobs:
               "combinator": "and",
               "rules": [
                 { "operator": "=", "value": "CheckRun", "property": "$blueprint"},
-                { "operator": "relatedTo", "blueprint": "Service", "value": "payment-service" }
+                { "operator": "relatedTo", "blueprint": "Service", "value": "${{ github.event.repository.name }}" }
               ]
             }            
       - name: Get all checks and latest runs on the service
@@ -69,8 +69,8 @@ jobs:
         with:
           clientId: ${{ secrets.PORT_CLIENT_ID }}
           clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
-          identifier: payment-service
-          title: Payment Service
+          identifier: ${{ github.event.repository.name }}
+          title: ${{ github.event.repository.name }}
           blueprint: Service
           properties: |
             {

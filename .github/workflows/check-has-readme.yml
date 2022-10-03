@@ -29,7 +29,7 @@ jobs:
        with:
          clientId: ${{ secrets.PORT_CLIENT_ID }}
          clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
-         title: readme-checkrun-payment-service
+         title: readme-checkrun-${{ github.event.repository.name }}
          blueprint: CheckRun
          properties: |
            {
@@ -37,7 +37,7 @@ jobs:
            }
          relations: |
            {
-             "service": "payment-service",
+             "service": "${{ github.event.repository.name }}",
              "check": "readme"
            } 
         
