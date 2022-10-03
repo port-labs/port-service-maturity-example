@@ -2,6 +2,8 @@ name: Run service maturity tests
 
 on:
   workflow_dispatch:
+#  schedule:
+#   - cron:  '30 5,17 * * *'
 
 jobs:
   check-has-readme:
@@ -53,8 +55,8 @@ jobs:
           checks = sorted(${{ steps.search-checks.outputs.entities }}, key=lambda check: check["properties"]["tier"], reverse=True)
           final_rank = checks[0]["relations"]["rank"]
           for check in checks:
-            currentCheckCheckRuns = [checkRun for checkRun in ${{ steps.search-check-runs.outputs.entities }} if checkRun["relations"]["check"] == check["identifier"]] 
-            latestCheckRun = max(currentCheckCheckRuns, key=lambda checkRun: checkRun["createdAt"])
+            currentCheckRuns = [checkRun for checkRun in ${{ steps.search-check-runs.outputs.entities }} if checkRun["relations"]["check"] == check["identifier"]] 
+            latestCheckRun = max(currentCheckRuns, key=lambda checkRun: checkRun["createdAt"])
             if latestCheckRun["properties"]["status"] == "success": 
               final_rank = check["relations"]["rank"]
             else:
