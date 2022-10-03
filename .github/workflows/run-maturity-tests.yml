@@ -57,5 +57,5 @@ jobs:
               finalTier = check["tier"]
             else:
               break
-          print(f`::set-output name=final-tier::{finalTier}`)
+          print(f'::set-output name=final-tier::{finalTier}')
         shell: python
