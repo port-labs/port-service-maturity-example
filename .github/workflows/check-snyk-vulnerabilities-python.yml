@@ -10,9 +10,10 @@ on:
       SNYK_TOKEN: 
         required: true
 jobs:
-  check-has-readme:
+  check-has-snyk-vulnerabilities:
     runs-on: ubuntu-latest
     steps:
+     - uses: actions/checkout@v3
      - name: Run Snyk to check for vulnerabilities
        id: snyk
        uses: snyk/actions/python@master
