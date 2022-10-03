@@ -42,9 +42,9 @@ jobs:
           operation: SEARCH
           query:  |
             { 
-              "combinator": "or",
+              "combinator": "and",
               "rules": [
-                { "operator": "=", "value": "CheckRuns", "property": "$blueprint"},
+                { "operator": "=", "value": "CheckRun", "property": "$blueprint"},
                 { "operator": "relatedTo", "blueprint": "Service", "value": "payment-service" }
               ]
             }            
