@@ -31,6 +31,6 @@ jobs:
             { "rules": [{ "operator": "=", "value": "Check", "property": "$blueprint"}], "combinator": "and" }
       - name: Get all checks and latest runs on the service
         run: |
-          for check in ${{ search-entities.outputs.entities }}; do
+          for check in ${{ steps.search-entities.outputs.entities }}; do
             echo "$check"
           done
