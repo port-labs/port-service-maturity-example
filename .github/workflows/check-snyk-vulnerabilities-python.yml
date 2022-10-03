@@ -13,7 +13,7 @@ jobs:
   check-has-snyk-vulnerabilities:
     runs-on: ubuntu-latest
     steps:
-     - uses: actions/checkout@v3
+     - uses: actions/checkout@master
      - name: Run Snyk to check for vulnerabilities
        id: snyk
        uses: snyk/actions/python@master
