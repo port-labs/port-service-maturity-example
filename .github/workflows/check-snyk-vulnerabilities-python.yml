@@ -1,0 +1,47 @@
+name: Check if service has readme
+
+on:
+  workflow_call:
+    secrets: 
+      PORT_CLIENT_ID: 
+        required: true
+      PORT_CLIENT_SECRET: 
+        required: true
+      SNYK_TOKEN: 
+        required: true
+jobs:
+  check-has-readme:
+    runs-on: ubuntu-latest
+    steps:
+     - name: Run Snyk to check for vulnerabilities
+       id: snyk
+       uses: snyk/actions/python-3.8@master
+       env:
+         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+       with:
+         args: --severity-threshold=high
+     - name: "Determine status"
+       id: determine-status
+       run: |
+        if [ "${{ steps.snyk.outputs.pass }}" = "true" ]; then
+          echo "::set-output name=status::success"
+        else
+          echo "::set-output name=status::failure"
+        fi
+     - name: "Update check run result"
+       uses: port-labs/port-github-action@v1
+       with:
+         clientId: ${{ secrets.PORT_CLIENT_ID }}
+         clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
+         title: readme
+         blueprint: CheckRun
+         properties: |
+           {
+              "status": "${{ steps.determine-status.outputs.status }}"
+           }
+         relations: |
+           {
+             "service": "payment-service",
+             "check": "readme"
+           } 
+        

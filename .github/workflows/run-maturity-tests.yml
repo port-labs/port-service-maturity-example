@@ -9,3 +9,22 @@ jobs:
     secrets: 
       PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
       PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
+
+  check-snyk-vulnerabilities-python:
+    uses: ./.github/workflows/check-snyk-vulnerabilities-python.yml
+    secrets: 
+      PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
+      PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+  
+  calculate-final-score:
+    needs: [check-has-readme, check-snyk-vulnerabilities-python]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get all checks and latest runs on the service
+        run: |
+          checks = $(port get check --filter "service.name=payment-service" --fields "name")
+          for check in $checks; do
+            latestRun = $(port get checkrun --filter "check.name=$check" --sort "createdAt" --limit 1 --fields "status")
+            echo "$check: $latestRun"
+          done
