@@ -48,13 +48,13 @@ jobs:
             }            
       - name: Get all checks and latest runs on the service
         run: |
-          checks = sorted(${{ steps.search-checks.outputs.entities }}, key=lambda check: check["tier"], reverse=True)
-          finalTier = checks[0]["tier"]
+          checks = sorted(${{ steps.search-checks.outputs.entities }}, key=lambda check: check["properties"]["tier"], reverse=True)
+          finalTier = checks[0]["properties"]["tier"]
           for check in checks:
             currentCheckCheckRuns = [checkRun for checkRun in ${{ steps.search-check-runs.outputs.entities }} if checkRun["relations"]["check"] == check["identifier"]] 
             latestCheckRun = max(currentCheckCheckRuns, key=lambda checkRun: checkRun["createdAt"])
             if latestCheckRun["properties"]["status"] == "success": 
-              finalTier = check["tier"]
+              finalTier = check["properties"]["tier"]
             else:
               break
           print(f'::set-output name=final-tier::{finalTier}')
