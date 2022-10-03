@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
      - uses: actions/checkout@master
+     - run: pwd
+     - run: ls -l
      - name: Run Snyk to check for vulnerabilities
        id: snyk
        uses: snyk/actions/python@master
