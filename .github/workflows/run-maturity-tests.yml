@@ -48,16 +48,17 @@ jobs:
             }            
       - name: Get all checks and latest runs on the service
         run: |
+          import os
           checks = sorted(${{ steps.search-checks.outputs.entities }}, key=lambda check: check["properties"]["tier"], reverse=True)
-          finalRank = checks[0]["relations"]["rank"]
+          final_rank = checks[0]["relations"]["rank"]
           for check in checks:
             currentCheckCheckRuns = [checkRun for checkRun in ${{ steps.search-check-runs.outputs.entities }} if checkRun["relations"]["check"] == check["identifier"]] 
             latestCheckRun = max(currentCheckCheckRuns, key=lambda checkRun: checkRun["createdAt"])
             if latestCheckRun["properties"]["status"] == "success": 
-              finalRank = check["relations"]["rank"]
+              final_rank = check["relations"]["rank"]
             else:
               break
-          print(f'::set-output name=final-rank::{finalRank}')
+          os.system("echo ::set-output name=final-rank::" + final_rank)
         shell: python
 
       - name: Update service maturity score
@@ -70,9 +71,9 @@ jobs:
           blueprint: Service
           properties: |
             {
-               "repo": "${{ github.event.repository.name }}"
+               "repo": "${{ github.event.repository.url }}"
             }
           relations: |
             {
-              "rank": ${{ steps.calculate-final-score.outputs.final-rank }}
+              "rank": "${{ steps.calculate-final-score.outputs.final-rank }}"
             }
