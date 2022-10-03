@@ -1,4 +1,4 @@
-name: Check if service has readme
+name: Check if service has snyk vulnerabilities
 
 on:
   workflow_call:
