@@ -49,7 +49,7 @@ jobs:
       - name: Get all checks and latest runs on the service
         run: |
           for check in ${{ steps.search-checks.outputs.entities }}:
-            currentCheckCheckRuns = [checkRun for checkRun in ${{ steps.search-check-runs.outputs.entities }} if checkRun.relations.check == check.identifier] 
+            currentCheckCheckRuns = [checkRun for checkRun in ${{ steps.search-check-runs.outputs.entities }} if checkRun["relations"]["check"] == check["identifier"]] 
             latestCheckRun = max(currentCheckCheckRuns, key=lambda checkRun: checkRun.createdAt)
             print(latestCheckRun)
         shell: python
