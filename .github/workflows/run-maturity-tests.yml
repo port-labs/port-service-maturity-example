@@ -21,16 +21,33 @@ jobs:
     needs: [check-has-readme, check-snyk-vulnerabilities-python]
     runs-on: ubuntu-latest
     steps:
-      - id: search-entities
+      - id: search-checks
         uses: port-labs/port-github-action@v1
         with:
           clientId: ${{ secrets.PORT_CLIENT_ID }}
           clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
           operation: SEARCH
           query:  |
-            { "rules": [{ "operator": "=", "value": "Check", "property": "$blueprint"}], "combinator": "and" }
+            {
+               "combinator": "or",
+               "rules": [{ "operator": "=", "value": "Check", "property": "$blueprint"}] 
+            }
+      - id: search-check-runs
+        uses: port-labs/port-github-action@v1
+        with:
+          clientId: ${{ secrets.PORT_CLIENT_ID }}
+          clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
+          operation: SEARCH
+          query:  |
+            { 
+              "combinator": "or",
+              "rules": [
+                { "operator": "=", "value": "CheckRuns", "property": "$blueprint"},
+                { "operator": "relatedTo", "blueprint": "Service", "value": "payment-service" }
+              ]
+            }            
       - name: Get all checks and latest runs on the service
         run: |
-          for check in ${{ steps.search-entities.outputs.entities }}; do
-            echo "$check"
-          done
+          for x in ${{ steps.search-checks.outputs.entities }}:
+            print(x)
+        shell: python
