@@ -18,9 +18,9 @@ jobs:
             --url 'https://api.pagerduty.com/services/id?include%5B%5D=teams' \
             --header 'Accept: application/vnd.pagerduty+json;version=2' \
             --header 'Authorization: Token token=${{ secrets.PAGER_DUTY_TOKEN }}' \
-            --header 'Content-Type: application/json' | jq '.teams[].name' 
+            --header 'Content-Type: application/json' -o pager.json
             
-            cat workspaces.json | jq -c '.workspaces[]
+            cat pager.json
      - name: "Determine status"
        id: determine-status
        run: |
