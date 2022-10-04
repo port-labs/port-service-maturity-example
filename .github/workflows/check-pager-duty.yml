@@ -19,7 +19,7 @@ jobs:
             --header 'Accept: application/vnd.pagerduty+json;version=2' \
             --header 'Authorization: Token token=${{ secrets.PAGER_DUTY_TOKEN }}' \
             --header 'Content-Type: application/json' -o pager.json
-            echo ::set-output name=pager::$(cat pager.json | jq -c '.services[] | select(.name == "${{ github.event.repository.name }}")')
+            echo ::set-output name=pager::$(cat pager.json | jq -c '.services[] | select(.name == "${{ github.event.repository.name }}22")')
        id: pager
      - name: "Determine status"
        id: determine-status
@@ -35,7 +35,7 @@ jobs:
        with:
          clientId: ${{ secrets.PORT_CLIENT_ID }}
          clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
-         title: snyk-checkrun-${{ github.event.repository.name }}
+         title: pager-duty-checkrun-${{ github.event.repository.name }}
          blueprint: CheckRun
          properties: |
            {
