@@ -15,7 +15,7 @@ jobs:
     steps:
      - run: |
           curl --request GET \
-            --url 'https://api.pagerduty.com/services/id?include%5B%5D=teams' \
+            --url 'https://api.pagerduty.com/services?include%5B%5D=teams' \
             --header 'Accept: application/vnd.pagerduty+json;version=2' \
             --header 'Authorization: Token token=${{ secrets.PAGER_DUTY_TOKEN }}' \
             --header 'Content-Type: application/json' -o pager.json
