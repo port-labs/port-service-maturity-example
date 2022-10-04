@@ -12,13 +12,27 @@ jobs:
       PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
       PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
 
+  check-pager-duty:
+    uses: ./.github/workflows/check-pager-duty.yml
+    secrets: 
+      PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
+      PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
+      PAGER_DUTY_TOKEN: ${{ secrets.PAGER_DUTY_TOKEN }}
+      
   check-snyk-vulnerabilities-python:
     uses: ./.github/workflows/check-snyk-vulnerabilities-python.yml
     secrets: 
       PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
       PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-  
+
+  # service pager
+  # team pagere
+  # on call pager
+  # sentry
+  # check regulations
+  # jira tickets 
+
   calculate-final-score:
     needs: [check-has-readme, check-snyk-vulnerabilities-python]
     runs-on: ubuntu-latest

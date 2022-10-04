@@ -1,4 +1,4 @@
-name: Check if service has snyk vulnerabilities
+name: Check if service has pager duty configure
 
 on:
   workflow_call:
@@ -7,21 +7,20 @@ on:
         required: true
       PORT_CLIENT_SECRET: 
         required: true
-      SNYK_TOKEN: 
+      PAGER_DUTY_TOKEN: 
         required: true
 jobs:
-  check-has-snyk-vulnerabilities:
+  check-pager:
     runs-on: ubuntu-latest
     steps:
-     - uses: actions/checkout@master
-     - name: Run Snyk to check for vulnerabilities
-       id: snyk
-       continue-on-error: true
-       uses: snyk/actions/python@master
-       env:
-         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-       with:
-         args: --severity-threshold=high
+     - run: |
+          curl --request GET \
+            --url 'https://api.pagerduty.com/services/id?include%5B%5D=teams' \
+            --header 'Accept: application/vnd.pagerduty+json;version=2' \
+            --header 'Authorization: Token token=${{ secrets.PAGER_DUTY_TOKEN }}' \
+            --header 'Content-Type: application/json' | jq '.teams[].name' 
+            
+            cat workspaces.json | jq -c '.workspaces[]
      - name: "Determine status"
        id: determine-status
        run: |
