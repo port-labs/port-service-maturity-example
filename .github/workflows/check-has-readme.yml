@@ -11,6 +11,7 @@ jobs:
   check-has-readme:
     runs-on: ubuntu-latest
     steps:
+     - uses: actions/checkout@master
      - name: "Check file existence"
        id: is-readme-exist
        uses: andstor/file-existence-action@v1
@@ -19,7 +20,7 @@ jobs:
      - name: "Determine status"
        id: determine-status
        run: |
-        if [ "${{ steps.is-readme-exist.outputs.file_exists }}" = "true" ]; then
+        if [ "${{ steps.is-readme-exist.outputs.files_exists }}" = "true" ]; then
           echo "::set-output name=status::success"
         else
           echo "::set-output name=status::failure"
