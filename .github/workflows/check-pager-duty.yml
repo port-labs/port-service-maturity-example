@@ -20,7 +20,7 @@ jobs:
             --header 'Authorization: Token token=${{ secrets.PAGER_DUTY_TOKEN }}' \
             --header 'Content-Type: application/json' -o pager.json
             
-            echo ::set-output name=pager::$(cat pager.json | jq -c '.services[] | select(.name == "${{ github.event.repository.name }}")')
+            echo ::set-output name=pager::$(cat pager.json | jq -c '.services[] | select(.name == ${{ github.event.repository.name }})')
      - name: "Determine status"
        id: determine-status
        run: |
