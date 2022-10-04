@@ -10,7 +10,7 @@ on:
       PAGER_DUTY_TOKEN: 
         required: true
 jobs:
-  check-pager:
+  pager:
     runs-on: ubuntu-latest
     steps:
      - run: |
@@ -20,11 +20,12 @@ jobs:
             --header 'Authorization: Token token=${{ secrets.PAGER_DUTY_TOKEN }}' \
             --header 'Content-Type: application/json' -o pager.json
             
-            cat pager.json
+            echo ::set-output name=pager::$(cat pager.json | jq -c '.services[] | select(.name == "${{ github.event.repository.name }}")')
      - name: "Determine status"
        id: determine-status
        run: |
-        if [ "${{ steps.snyk.outcome }}" = "success" ]; then
+        echo ${{ steps.pager.outputs.pager }}
+        if [ "${{ steps.pager.outputs.pager }}" = "success" ]; then
           echo "::set-output name=status::success"
         else
           echo "::set-output name=status::failure"
