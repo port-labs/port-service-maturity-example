@@ -34,15 +34,17 @@ jobs:
        with:
          clientId: ${{ secrets.PORT_CLIENT_ID }}
          clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
-         title: pager-duty-=team-checkrun-${{ github.event.repository.name }}
+         title: pager-duty-team-checkrun-${{ github.event.repository.name }}
          blueprint: CheckRun
          properties: |
            {
-              "status": "${{ steps.determine-status.outputs.status }}"
+              "status": "${{ steps.determine-status.outputs.status }}",
+              "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+              "buildId": "${{ env.run_id }}"
            }
          relations: |
            {
              "service": "${{ github.event.repository.name }}",
-             "check": "pager-duty-team"
+             "check": "pager-team"
            } 
         

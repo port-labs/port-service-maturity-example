@@ -12,6 +12,12 @@ jobs:
       PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
       PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
 
+  check-has-sentry:
+    uses: ./.github/workflows/check-is-using-sentry.yml
+    secrets: 
+      PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
+      PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
+
   check-pager-duty:
     uses: ./.github/workflows/check-pager-duty.yml
     secrets: 
@@ -32,11 +38,6 @@ jobs:
       PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
       PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
-  # on call pager
-  # sentry
-  # check regulations
-  # jira tickets 
 
   calculate-final-score:
     needs: [check-has-readme, check-snyk-vulnerabilities-python]

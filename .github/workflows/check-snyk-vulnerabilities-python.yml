@@ -39,11 +39,13 @@ jobs:
          blueprint: CheckRun
          properties: |
            {
-              "status": "${{ steps.determine-status.outputs.status }}"
+              "status": "${{ steps.determine-status.outputs.status }}",
+              "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+              "buildId": "${{ env.run_id }}"
            }
          relations: |
            {
              "service": "${{ github.event.repository.name }}",
-             "check": "snyk-vulnerabilties"
+             "check": "snyk"
            } 
         

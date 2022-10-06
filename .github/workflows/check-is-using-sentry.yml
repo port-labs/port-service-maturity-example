@@ -1,4 +1,4 @@
-name: Check if service has pager duty configure
+name: Check if service has readme
 
 on:
   workflow_call:
@@ -7,24 +7,19 @@ on:
         required: true
       PORT_CLIENT_SECRET: 
         required: true
-      PAGER_DUTY_TOKEN: 
-        required: true
 jobs:
-  pager:
+  check-using-sentry:
     runs-on: ubuntu-latest
     steps:
-     - run: |
-          curl --request GET \
-            --url 'https://api.pagerduty.com/services?include%5B%5D=teams' \
-            --header 'Accept: application/vnd.pagerduty+json;version=2' \
-            --header 'Authorization: Token token=${{ secrets.PAGER_DUTY_TOKEN }}' \
-            --header 'Content-Type: application/json' -o pager.json
-            echo ::set-output name=pager::$(cat pager.json | jq -c '.services[] | select(.name == "${{ github.event.repository.name }}")')
-       id: pager
+     - uses: actions/checkout@master
+     - name: "Check file existence"
+       id: is-using-sentry
+       run: | 
+        echo "::set-output name=sentry-version::$(cat requirements.txt | grep sentry-sdk)" 
      - name: "Determine status"
        id: determine-status
        run: |
-        if [ -z "${{ steps.pager.outputs.pager }}" ]; then
+        if [ -z "${{ steps.is-using-sentry.outputs.sentry-version }}" ]; then
           echo "::set-output name=status::failure"
         else
           echo "::set-output name=status::success"
@@ -34,7 +29,6 @@ jobs:
        with:
          clientId: ${{ secrets.PORT_CLIENT_ID }}
          clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
-         title: pager-duty-checkrun-${{ github.event.repository.name }}
          blueprint: CheckRun
          properties: |
            {
@@ -45,6 +39,6 @@ jobs:
          relations: |
            {
              "service": "${{ github.event.repository.name }}",
-             "check": "pager"
+             "check": "sentry"
            } 
         
