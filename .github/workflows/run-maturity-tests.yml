@@ -72,10 +72,12 @@ jobs:
         id: calculate-final-score-algo
         run: |
           import os
-          checks = sorted(${{ steps.search-checks.outputs.entities }}, key=lambda check: check["properties"]["tier"], reverse=True)
+          checks_json = json.loads(${{ steps.search-checks.outputs.entities }})
+          checks = sorted(checks_json, key=lambda check: check["properties"]["tier"], reverse=True)
           final_rank = checks[0]["relations"]["rank"]
           for check in checks:
-            currentCheckRuns = [checkRun for checkRun in ${{ steps.search-check-runs.outputs.entities }} if checkRun["relations"]["check"] == check["identifier"]] 
+            check_runs_json = json.loads(${{ steps.search-check-runs.outputs.entities }})
+            currentCheckRuns = [checkRun for checkRun in check_runs_json if checkRun["relations"]["check"] == check["identifier"]] 
             latestCheckRun = max(currentCheckRuns, key=lambda checkRun: checkRun["createdAt"])
             if latestCheckRun["properties"]["status"] == "success": 
               final_rank = check["relations"]["rank"]
