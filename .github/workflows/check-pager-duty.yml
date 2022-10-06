@@ -40,7 +40,7 @@ jobs:
            {
               "status": "${{ steps.determine-status.outputs.status }}",
               "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-              "buildId": "${{ env.run_id }}"
+              "buildId": "${{ github.run_id }}"
            }
          relations: |
            {
