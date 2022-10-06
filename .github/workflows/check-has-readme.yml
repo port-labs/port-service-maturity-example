@@ -30,7 +30,7 @@ jobs:
        with:
          clientId: ${{ secrets.PORT_CLIENT_ID }}
          clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
-         title: readme-checkrun-${{ github.event.repository.name }}
+         title: readme-${{ github.event.repository.name }}
          blueprint: CheckRun
          properties: |
            {

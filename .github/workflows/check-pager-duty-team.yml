@@ -34,7 +34,7 @@ jobs:
        with:
          clientId: ${{ secrets.PORT_CLIENT_ID }}
          clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
-         title: pager-duty-team-checkrun-${{ github.event.repository.name }}
+         title: pager-team-${{ github.event.repository.name }}
          blueprint: CheckRun
          properties: |
            {
