@@ -72,6 +72,7 @@ jobs:
         id: calculate-final-score-algo
         run: |
           import os
+          import json
           checks_json = json.loads(${{ steps.search-checks.outputs.entities }})
           checks = sorted(checks_json, key=lambda check: check["properties"]["tier"], reverse=True)
           final_rank = checks[0]["relations"]["rank"]
