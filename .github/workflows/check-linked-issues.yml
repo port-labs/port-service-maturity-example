@@ -25,6 +25,7 @@ jobs:
      - name: "Determine status"
        id: determine-status
        run: |
+        ls -l 
         cat ${{ steps.issues.outputs.path }} 
         if [ ${{ steps.check-linked-issues.outputs.linked_issues_count }} < ${{ inputs.GITHUB_MAX_ISSUES }} ]; then
           echo "::set-output name=status::success"
