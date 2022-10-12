@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
      - name: Test repo for 
+       id: dep-freq
        uses: samsmithnz/deployment-frequency@main
        with:
          # change it to the name of the Workflow that you would like to measure
@@ -20,6 +21,7 @@ jobs:
      - name: "Determine status"
        id: determine-status
        run: |
+        echo "${{ steps.dep-freq.outputs.result }}"
         if [ "1" -lt "1" ]; then
           echo "::set-output name=status::success"
         else
