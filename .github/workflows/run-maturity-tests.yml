@@ -2,12 +2,26 @@ name: Run service maturity tests
 
 on:
   workflow_dispatch:
+    inputs:
+      GITHUB_MAX_ISSUES:
+        description: 'Maximum number of issues to pass the test'
+        default: "10"
+        type: "string"
+        required: true
 #  schedule:
 #   - cron:  '30 5,17 * * *'
 
 jobs:
   check-has-readme:
     uses: ./.github/workflows/check-has-readme.yml
+    secrets: 
+      PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
+      PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
+
+  check-linked-issues:
+    uses: ./.github/workflows/check-linked-issues.yml
+    with:
+      GITHUB_MAX_ISSUES: ${{ inputs.GITHUB_MAX_ISSUES }}
     secrets: 
       PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
       PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
@@ -72,7 +86,7 @@ jobs:
         id: calculate-final-score-algo
         run: |
           import os
-          checks = sorted(${{ steps.search-checks.outputs.entities }}, key=lambda check: check["properties"]["tier"], reverse=True)
+          checks = sorted(${{ steps.search-checks.outputs.entities }}, key=lambda check: check["properties"]["priorty"], reverse=True)
           final_rank = checks[0]["relations"]["rank"]
           for check in checks:
             currentCheckRuns = [checkRun for checkRun in ${{ steps.search-check-runs.outputs.entities }} if checkRun["relations"]["check"] == check["identifier"]] 

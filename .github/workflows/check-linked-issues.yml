@@ -1,0 +1,50 @@
+name: Check if service has readme
+
+on:
+  workflow_call:
+    inputs:
+      GITHUB_MAX_ISSUES:
+        type: "string"
+        default: "10"
+        required: true
+    secrets: 
+      PORT_CLIENT_ID: 
+        required: true
+      PORT_CLIENT_SECRET: 
+        required: true
+jobs:
+  check-has-readme:
+    runs-on: ubuntu-latest
+    steps:
+     - uses: nearform/github-action-check-linked-issues@v1
+       id: check-linked-issues
+       with:
+         comment: false
+          
+     - name: "Determine status"
+       id: determine-status
+       run: |
+        if [ ${{ steps.check-linked-issues.outputs.linked_issues_count }} < ${{ inputs.GITHUB_MAX_ISSUES }} ]; then
+          echo "::set-output name=status::success"
+        else
+          echo "::set-output name=status::failure"
+        fi
+     - name: "Update check run result"
+       uses: port-labs/port-github-action@v1
+       with:
+         clientId: ${{ secrets.PORT_CLIENT_ID }}
+         clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
+         title: linked-issues-${{ github.event.repository.name }}
+         blueprint: CheckRun
+         properties: |
+           {
+              "status": "${{ steps.determine-status.outputs.status }}",
+              "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+              "buildId": "${{ github.run_id }}"
+           }
+         relations: |
+           {
+             "service": "${{ github.event.repository.name }}",
+             "check": "linked-issues"
+           } 
+        
