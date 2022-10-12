@@ -54,7 +54,7 @@ jobs:
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
   calculate-final-score:
-    needs: [check-has-readme, check-snyk-vulnerabilities-python]
+    needs: [check-has-readme, check-snyk-vulnerabilities-python, check-linked-issues, check-has-sentry, check-pager-duty, check-pager-duty-team]
     runs-on: ubuntu-latest
     steps:
       - id: search-checks

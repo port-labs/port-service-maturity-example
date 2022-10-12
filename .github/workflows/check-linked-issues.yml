@@ -16,14 +16,15 @@ jobs:
   check-linked-issues:
     runs-on: ubuntu-latest
     steps:
-     - uses: nearform/github-action-check-linked-issues@v1
-       id: check-linked-issues
+     - name: Find all issues
+       id: issues
+       uses: lee-dohm/select-matching-issues@v1
        with:
-         comment: false
-          
+         token: ${{ github.token }}
      - name: "Determine status"
        id: determine-status
        run: |
+        cat ${{ steps.bugs.outputs.path }} 
         if [ ${{ steps.check-linked-issues.outputs.linked_issues_count }} < ${{ inputs.GITHUB_MAX_ISSUES }} ]; then
           echo "::set-output name=status::success"
         else

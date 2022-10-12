@@ -95,6 +95,7 @@ resource "port-labs_blueprint" "Check" {
   }
 
   relations {
+    required   = true
     title      = port-labs_blueprint.Rank.title
     target     = port-labs_blueprint.Rank.identifier
     identifier = "rank"
@@ -164,9 +165,11 @@ resource "port-labs_blueprint" "CheckRun" {
     title      = port-labs_blueprint.Check.title
     identifier = "check"
     target     = port-labs_blueprint.Check.identifier
+    required   = true
   }
 
   relations {
+    required   = true
     identifier = "service"
     title      = port-labs_blueprint.Service.title
     target     = port-labs_blueprint.Service.identifier
