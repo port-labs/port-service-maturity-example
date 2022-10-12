@@ -53,14 +53,9 @@ jobs:
       PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-  check-elite-deployment-freq:
-    uses: ./.github/workflows/check-elite-deployment-freq.yml
-    secrets: 
-      PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
-      PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
 
   calculate-final-score:
-    needs: [check-has-readme, check-snyk-vulnerabilities-python, check-linked-issues, check-has-sentry, check-pager-duty, check-pager-duty-team, check-elite-deployment-freq]
+    needs: [check-has-readme, check-snyk-vulnerabilities-python, check-linked-issues, check-has-sentry, check-pager-duty, check-pager-duty-team]
     runs-on: ubuntu-latest
     steps:
       - id: search-checks
