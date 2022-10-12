@@ -8,7 +8,7 @@ on:
       PORT_CLIENT_SECRET: 
         required: true
 jobs:
-  check-has-readme:
+  check-linked-issues:
     runs-on: ubuntu-latest
     steps:
      - uses: actions/checkout@master
