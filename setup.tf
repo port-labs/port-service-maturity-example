@@ -27,8 +27,8 @@ resource "port-labs_blueprint" "Rank" {
     type       = "string"
   }
   properties {
-    identifier = "priorty"
-    title      = "Priorty"
+    identifier = "priority"
+    title      = "Priority"
     type       = "number"
   }
   properties {
@@ -89,9 +89,9 @@ resource "port-labs_blueprint" "Check" {
   }
 
   mirror_properties {
-    identifier = "priorty"
-    title      = "Priorty"
-    path       = "rank.priorty"
+    identifier = "priority"
+    title      = "Priority"
+    path       = "rank.priority"
   }
 
   relations {
@@ -139,7 +139,7 @@ resource "port-labs_blueprint" "CheckRun" {
   properties {
     identifier = "status"
     type       = "string"
-    title      = "StatusDescription"
+    title      = "Status"
     enum = [
       "success",
       "failure",
@@ -192,7 +192,7 @@ resource "port-labs_entity" "Level1" {
   }
 
   properties {
-    name  = "priorty"
+    name  = "priority"
     value = 1
   }
 
@@ -211,7 +211,7 @@ resource "port-labs_entity" "Level2" {
   }
 
   properties {
-    name  = "priorty"
+    name  = "priority"
     value = 2
   }
 
@@ -231,7 +231,7 @@ resource "port-labs_entity" "Level3" {
   }
 
   properties {
-    name  = "priorty"
+    name  = "priority"
     value = 3
   }
 
@@ -251,7 +251,7 @@ resource "port-labs_entity" "Level4" {
   }
 
   properties {
-    name  = "priorty"
+    name  = "priority"
     value = 4
   }
 
@@ -271,7 +271,7 @@ resource "port-labs_entity" "Level5" {
   }
 
   properties {
-    name  = "priorty"
+    name  = "priority"
     value = 5
   }
 

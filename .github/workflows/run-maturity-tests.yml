@@ -87,7 +87,7 @@ jobs:
         id: calculate-final-score-algo
         run: |
           import os
-          checks = sorted(${{ steps.search-checks.outputs.entities }}, key=lambda check: check["properties"]["priorty"], reverse=True)
+          checks = sorted(${{ steps.search-checks.outputs.entities }}, key=lambda check: check["properties"]["priority"], reverse=True)
           final_rank = checks[0]["relations"]["rank"]
           for check in checks:
             currentCheckRuns = [checkRun for checkRun in ${{ steps.search-check-runs.outputs.entities }} if checkRun["relations"]["check"] == check["identifier"]] 
