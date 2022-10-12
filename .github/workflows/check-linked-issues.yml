@@ -26,7 +26,8 @@ jobs:
        id: determine-status
        run: |
         ls -l 
-        cat __matching-issues.txt
+        cat __matching-issues.txt | wc -l
+
      - name: "Update check run result"
        uses: port-labs/port-github-action@v1
        with:
