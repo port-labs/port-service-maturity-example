@@ -2,11 +2,6 @@ name: Check if service has readme
 
 on:
   workflow_call:
-    inputs:
-      GITHUB_MAX_ISSUES:
-        type: "string"
-        default: "10"
-        required: true
     secrets: 
       PORT_CLIENT_ID: 
         required: true
@@ -25,8 +20,7 @@ jobs:
      - name: "Determine status"
        id: determine-status
        run: |
-        issues_number=$(cat __matching-issues.txt | wc -l)
-        if [ "$issues_number" -lt "${{ inputs.GITHUB_MAX_ISSUES }}" ]; then
+        if [ "1" -lt "1" ]; then
           echo "::set-output name=status::success"
         else
           echo "::set-output name=status::failure"
