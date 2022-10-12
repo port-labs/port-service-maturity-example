@@ -20,7 +20,7 @@ jobs:
        id: issues
        uses: lee-dohm/select-matching-issues@v1
        with:
-         query: ''
+         query: 'is:open is:issue'
          token: ${{ github.token }}
      - name: "Determine status"
        id: determine-status
