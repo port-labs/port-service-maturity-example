@@ -25,8 +25,9 @@ jobs:
      - name: "Determine status"
        id: determine-status
        run: |
+        cat __matching-issues.txt
         issues_number=$(cat __matching-issues.txt | wc -l)
-        cat $issues_number
+        echo $issues_number
         if [ "$issues_number" -lt "${{ inputs.GITHUB_MAX_ISSUES }}"" ]; then
           echo "::set-output name=status::success"
         else
