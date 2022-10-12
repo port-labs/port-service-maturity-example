@@ -20,6 +20,7 @@ jobs:
        id: issues
        uses: lee-dohm/select-matching-issues@v1
        with:
+         query: ''
          token: ${{ github.token }}
      - name: "Determine status"
        id: determine-status
