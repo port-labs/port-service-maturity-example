@@ -27,11 +27,6 @@ jobs:
        run: |
         ls -l 
         cat __matching-issues.txt
-        if [ ${{ steps.check-linked-issues.outputs.linked_issues_count }} < ${{ inputs.GITHUB_MAX_ISSUES }} ]; then
-          echo "::set-output name=status::success"
-        else
-          echo "::set-output name=status::failure"
-        fi
      - name: "Update check run result"
        uses: port-labs/port-github-action@v1
        with:
