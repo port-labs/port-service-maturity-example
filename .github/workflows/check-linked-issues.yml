@@ -25,14 +25,13 @@ jobs:
      - name: "Determine status"
        id: determine-status
        run: |
-        issues_number = cat __matching-issues.txt | wc -l
+        issues_number=$(cat __matching-issues.txt | wc -l)
         cat $issues_number
-        if [ issues_number < ${{ inputs.GITHUB_MAX_ISSUES }} ]; then
+        if [ "$issues_number" -lt "${{ inputs.GITHUB_MAX_ISSUES }}"" ]; then
           echo "::set-output name=status::success"
         else
           echo "::set-output name=status::failure"
         fi
-        
 
      - name: "Update check run result"
        uses: port-labs/port-github-action@v1
