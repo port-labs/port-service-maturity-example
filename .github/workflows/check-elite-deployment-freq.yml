@@ -1,0 +1,53 @@
+name: Check if service has readme
+
+on:
+  workflow_call:
+    inputs:
+      GITHUB_MAX_ISSUES:
+        type: "string"
+        default: "10"
+        required: true
+    secrets: 
+      PORT_CLIENT_ID: 
+        required: true
+      PORT_CLIENT_SECRET: 
+        required: true
+jobs:
+  check-elite-deployment-freq:
+    runs-on: ubuntu-latest
+    steps:
+     - name: Test repo for 
+       uses: samsmithnz/deployment-frequency@main
+       with:
+         # change it to the name of the Workflow that you would like to measure
+         workflows: 'Run service maturity tests'
+         actions-token: ${{ github.token }}
+     - name: "Determine status"
+       id: determine-status
+       run: |
+        issues_number=$(cat __matching-issues.txt | wc -l)
+        if [ "$issues_number" -lt "${{ inputs.GITHUB_MAX_ISSUES }}" ]; then
+          echo "::set-output name=status::success"
+        else
+          echo "::set-output name=status::failure"
+        fi
+
+     - name: "Update check run result"
+       uses: port-labs/port-github-action@v1
+       with:
+         clientId: ${{ secrets.PORT_CLIENT_ID }}
+         clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
+         title: linked-issues-${{ github.event.repository.name }}
+         blueprint: CheckRun
+         properties: |
+           {
+              "status": "${{ steps.determine-status.outputs.status }}",
+              "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+              "buildId": "${{ github.run_id }}"
+           }
+         relations: |
+           {
+             "service": "${{ github.event.repository.name }}",
+             "check": "elite-deployment-frequency"
+           } 
+        

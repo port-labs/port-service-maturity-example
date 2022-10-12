@@ -409,6 +409,26 @@ resource "port-labs_entity" "linked-issues-check" {
     port-labs_entity.Level5,
   ]
 }
+resource "port-labs_entity" "elite-deployment-freq-check" {
+  title      = "DORA Elite Deployment Frequency"
+  identifier = "elite-deployment-frequency"
+  blueprint  = port-labs_blueprint.Check.identifier
+  properties {
+    name  = "description"
+    value = "Check the repository deployment frequency in the last 30 days and wheter its in the DORA Elite standard (at least once per day)"
+  }
+  properties {
+    name  = "category"
+    value = "Quality"
+  }
+  relations {
+    name       = "rank"
+    identifier = port-labs_entity.Level5.identifier
+  }
+  depends_on = [
+    port-labs_entity.Level5,
+  ]
+}
 
 resource "port-labs_entity" "repository-service" {
   title      = "port-service-maturity-example" // Put here the repository name of the service
