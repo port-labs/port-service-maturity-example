@@ -18,23 +18,28 @@ provider "port-labs" {
 
 // defining blueprint
 resource "port-labs_blueprint" "Rank" {
-  title      = "Rank"
-  icon       = "Permission"
-  identifier = "Rank"
+  title       = "Rank"
+  description = "a rank is a collection of properties that defines what a rank is a Check is connected to it to define how important the Check is, while the Service is connected to it to define the service maturity"
+  icon        = "Permission"
+  identifier  = "Rank"
   properties {
-    identifier = "description"
-    title      = "Description"
-    type       = "string"
+    identifier  = "description"
+    title       = "Description"
+    description = "An explanation of how service in this Rank is supposed to look like"
+    icon        = "Docs"
+    type        = "string"
   }
   properties {
-    identifier = "priority"
-    title      = "Priority"
-    type       = "number"
+    identifier  = "priority"
+    title       = "Priority"
+    description = "The importance of the Rank 1 - 5"
+    type        = "number"
   }
   properties {
-    identifier = "level"
-    type       = "string"
-    title      = "Level"
+    identifier  = "level"
+    type        = "string"
+    description = "The level of the Rank (Level 1, Level 2 etc...)"
+    title       = "Level"
     enum = [
       "Level 1",
       "Level 2",
@@ -53,18 +58,22 @@ resource "port-labs_blueprint" "Rank" {
 }
 
 resource "port-labs_blueprint" "Check" {
-  title      = "Check"
-  icon       = "DevopsTool"
-  identifier = "Check"
+  title       = "Check"
+  icon        = "DevopsTool"
+  identifier  = "Check"
+  description = "a check is the definition of the Check responsibility"
   properties {
-    identifier = "description"
-    type       = "string"
-    title      = "Description"
+    identifier  = "description"
+    type        = "string"
+    icon        = "Docs"
+    title       = "Description"
+    description = "a small description of the check and its purpose"
   }
   properties {
-    identifier = "category"
-    type       = "string"
-    title      = "Category"
+    identifier  = "category"
+    type        = "string"
+    title       = "Category"
+    description = "in which domain the check applies to (Service Ownership, security, reliability etc..)"
     enum = [
       "Service Ownership",
       "Security",
@@ -83,8 +92,8 @@ resource "port-labs_blueprint" "Check" {
     }
   }
   mirror_properties {
-    identifier = "maturity"
-    title      = "Maturity"
+    identifier = "level"
+    title      = "Level"
     path       = "rank.level"
   }
 
@@ -107,14 +116,17 @@ resource "port-labs_blueprint" "Check" {
 }
 
 resource "port-labs_blueprint" "Service" {
-  title      = "Service"
-  icon       = "Service"
-  identifier = "Service"
+  title       = "Service"
+  icon        = "Service"
+  identifier  = "Service"
+  description = "Service is the object that we would like to estimate its maturity i.e Payment Service, Order Service etc"
   properties {
-    identifier = "repo"
-    type       = "string"
-    format     = "url"
-    title      = "Repository"
+    identifier  = "repo"
+    type        = "string"
+    format      = "url"
+    title       = "Repository"
+    description = "the URL of the git repository"
+    icon        = "Git"
   }
   mirror_properties {
     identifier = "maturity"
@@ -133,13 +145,15 @@ resource "port-labs_blueprint" "Service" {
 }
 
 resource "port-labs_blueprint" "CheckRun" {
-  title      = "Check Run"
-  icon       = "Deployment"
-  identifier = "CheckRun"
+  title       = "Check Run"
+  icon        = "Deployment"
+  identifier  = "CheckRun"
+  description = "a check run is the actual Job Run of the Check definition on a specific Service"
   properties {
-    identifier = "status"
-    type       = "string"
-    title      = "Status"
+    identifier  = "status"
+    type        = "string"
+    title       = "Status"
+    description = "check run result failure or success"
     enum = [
       "success",
       "failure",
@@ -150,15 +164,18 @@ resource "port-labs_blueprint" "CheckRun" {
     }
   }
   properties {
-    identifier = "buildId"
-    type       = "string"
-    title      = "Build Id"
+    identifier  = "buildId"
+    type        = "string"
+    title       = "Build Id"
+    description = "an identifier to the buildId of the check run to identify multiple check runs of the same build"
   }
   properties {
-    identifier = "url"
-    type       = "string"
-    format     = "url"
-    title      = "Job URL"
+    identifier  = "url"
+    type        = "string"
+    format      = "url"
+    title       = "Job URL"
+    icon        = "Github"
+    description = "a link to the Job URL of the actual GitHub run"
   }
 
   relations {
