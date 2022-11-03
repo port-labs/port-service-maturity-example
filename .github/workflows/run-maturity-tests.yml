@@ -1,0 +1,128 @@
+name: Run service maturity tests
+
+on:
+  workflow_dispatch:
+  schedule:
+   - cron:  '0 * * * *'
+
+jobs:
+  check-has-readme:
+    uses: ./.github/workflows/check-has-readme.yml
+    secrets: 
+      PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
+      PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
+
+  check-linked-issues:
+    uses: ./.github/workflows/check-linked-issues.yml
+    with:
+      GITHUB_MAX_ISSUES: "10"
+    secrets: 
+      PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
+      PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
+
+  check-has-sentry:
+    uses: ./.github/workflows/check-is-using-sentry.yml
+    secrets: 
+      PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
+      PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
+
+  check-pager-duty:
+    uses: ./.github/workflows/check-pager-duty.yml
+    secrets: 
+      PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
+      PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
+      PAGER_DUTY_TOKEN: ${{ secrets.PAGER_DUTY_TOKEN }}
+  
+  check-pager-duty-team:
+    uses: ./.github/workflows/check-pager-duty-team.yml
+    secrets: 
+      PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
+      PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
+      PAGER_DUTY_TOKEN: ${{ secrets.PAGER_DUTY_TOKEN }}
+
+  check-snyk-vulnerabilities-python:
+    uses: ./.github/workflows/check-snyk-vulnerabilities-python.yml
+    secrets: 
+      PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
+      PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+  check-redoc:
+    uses: ./.github/workflows/check-redoc.yml
+    secrets: 
+      PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
+      PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
+
+  check-fastapi-version:
+    uses: ./.github/workflows/check-fastapi-version.yml
+    secrets: 
+      PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
+      PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
+
+  check-has-codeowners:
+    uses: ./.github/workflows/check-has-codeowners.yml
+    secrets: 
+      PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
+      PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
+
+  calculate-final-score:
+    needs: [check-has-readme, check-snyk-vulnerabilities-python, check-linked-issues, check-has-sentry, check-pager-duty, check-pager-duty-team, check-redoc, check-fastapi-version, check-has-codeowners]
+    runs-on: ubuntu-latest
+    steps:
+      - id: search-checks
+        uses: port-labs/port-github-action@v1
+        with:
+          clientId: ${{ secrets.PORT_CLIENT_ID }}
+          clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
+          operation: SEARCH
+          query:  |
+            {
+               "combinator": "or",
+               "rules": [{ "operator": "=", "value": "Check", "property": "$blueprint"}] 
+            }
+      - id: search-check-runs
+        uses: port-labs/port-github-action@v1
+        with:
+          clientId: ${{ secrets.PORT_CLIENT_ID }}
+          clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
+          operation: SEARCH
+          query:  |
+            { 
+              "combinator": "and",
+              "rules": [
+                { "operator": "=", "value": "CheckRun", "property": "$blueprint"},
+                { "operator": "relatedTo", "blueprint": "Service", "value": "${{ github.event.repository.name }}" }
+              ]
+            }            
+      - name: Get all checks and latest runs on the service
+        id: calculate-final-score-algo
+        run: |
+          import os
+          checks = sorted(${{ steps.search-checks.outputs.entities }}, key=lambda check: check["properties"]["priority"], reverse=False)
+          final_rank = checks[0]["relations"]["rank"]
+          for check in checks:
+            currentCheckRuns = [checkRun for checkRun in ${{ steps.search-check-runs.outputs.entities }} if checkRun["relations"]["check"] == check["identifier"]] 
+            latestCheckRun = max(currentCheckRuns, key=lambda checkRun: checkRun["createdAt"])
+            if latestCheckRun["properties"]["status"] == "success": 
+              final_rank = check["relations"]["rank"]
+            else:
+              break
+          os.system("echo ::set-output name=final-rank::" + final_rank)
+        shell: python
+
+      - name: Update service maturity score
+        uses: port-labs/port-github-action@v1
+        with:
+          clientId: ${{ secrets.PORT_CLIENT_ID }}
+          clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
+          identifier: ${{ github.event.repository.name }}
+          title: ${{ github.event.repository.name }}
+          blueprint: Service
+          properties: |
+            {
+               "repo": "${{ github.event.repository.url }}"
+            }
+          relations: |
+            {
+              "rank": "${{ steps.calculate-final-score-algo.outputs.final-rank }}"
+            }
