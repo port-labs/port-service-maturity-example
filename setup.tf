@@ -192,7 +192,7 @@ resource "port-labs_entity" "Level1" {
   identifier = "Level1"
   properties {
     name  = "description"
-    value = "Process unpredictable and poortly reactive"
+    value = "Developing"
   }
 
   properties {
@@ -211,7 +211,7 @@ resource "port-labs_entity" "Level2" {
   identifier = "Level2"
   properties {
     name  = "description"
-    value = "Process characterized for projects and is often react"
+    value = "Implmenting"
   }
 
   properties {
@@ -231,7 +231,7 @@ resource "port-labs_entity" "Level3" {
   identifier = "Level3"
   properties {
     name  = "description"
-    value = "Process characterized for the organization and is proactive"
+    value = "Sustaining"
   }
 
   properties {
@@ -251,7 +251,7 @@ resource "port-labs_entity" "Level4" {
   identifier = "Level4"
   properties {
     name  = "description"
-    value = "Process easured and controlled by the organization"
+    value = "Advancing"
   }
 
   properties {
@@ -271,7 +271,7 @@ resource "port-labs_entity" "Level5" {
   identifier = "Level5"
   properties {
     name  = "description"
-    value = "Focus on contiunous process imporevements"
+    value = "Innovating"
   }
 
   properties {
@@ -294,7 +294,7 @@ resource "port-labs_entity" "readme-check" {
   blueprint  = port-labs_blueprint.Check.identifier
   properties {
     name  = "description"
-    value = "Is README.md file exists within the repository?"
+    value = "Does a README.md file exist within the repository?"
   }
   properties {
     name  = "category"
@@ -312,7 +312,7 @@ resource "port-labs_entity" "codewoners-check" {
   blueprint  = port-labs_blueprint.Check.identifier
   properties {
     name  = "description"
-    value = "Is CODEOWNERS file exists within the repository?"
+    value = "Does a CODEOWNERS file exist within the repository?"
   }
   properties {
     name  = "category"
@@ -349,7 +349,7 @@ resource "port-labs_entity" "pager-check" {
   blueprint  = port-labs_blueprint.Check.identifier
   properties {
     name  = "description"
-    value = "Is pagerduty contain the service?"
+    value = "Is the service listed in PagerDuty?"
   }
   properties {
     name  = "category"
@@ -367,7 +367,7 @@ resource "port-labs_entity" "fast-api-version-check" {
   blueprint  = port-labs_blueprint.Check.identifier
   properties {
     name  = "description"
-    value = "Is fastApi version equals 0.85.2"
+    value = "Is fastApi version equals 0.85.2?"
   }
   properties {
     name  = "category"
