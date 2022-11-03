@@ -27,7 +27,7 @@ jobs:
        with:
          clientId: ${{ secrets.PORT_CLIENT_ID }}
          clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
-         title: pager-${{ github.event.repository.name }}
+         title: redoc-${{ github.event.repository.name }}
          blueprint: CheckRun
          properties: |
            {
