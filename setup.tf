@@ -109,10 +109,6 @@ resource "port-labs_blueprint" "Check" {
     target     = port-labs_blueprint.Rank.identifier
     identifier = "rank"
   }
-
-  depends_on = [
-    port-labs_blueprint.Rank,
-  ]
 }
 
 resource "port-labs_blueprint" "Service" {
@@ -138,10 +134,6 @@ resource "port-labs_blueprint" "Service" {
     identifier = "rank"
     target     = port-labs_blueprint.Rank.identifier
   }
-
-  depends_on = [
-    port-labs_blueprint.Rank,
-  ]
 }
 
 resource "port-labs_blueprint" "CheckRun" {
@@ -191,11 +183,6 @@ resource "port-labs_blueprint" "CheckRun" {
     title      = port-labs_blueprint.Service.title
     target     = port-labs_blueprint.Service.identifier
   }
-
-  depends_on = [
-    port-labs_blueprint.Service,
-    port-labs_blueprint.Check
-  ]
 }
 
 // Defining ranks
@@ -307,7 +294,7 @@ resource "port-labs_entity" "readme-check" {
   blueprint  = port-labs_blueprint.Check.identifier
   properties {
     name  = "description"
-    value = "Check if the repository has a README.md file"
+    value = "Is README.md file exists within the repository?"
   }
   properties {
     name  = "category"
@@ -317,10 +304,26 @@ resource "port-labs_entity" "readme-check" {
     identifier = port-labs_entity.Level1.identifier
     name       = "rank"
   }
-  depends_on = [
-    port-labs_entity.Level1,
-  ]
 }
+
+resource "port-labs_entity" "codewoners-check" {
+  title      = "CODEOWNERS Check"
+  identifier = "codewoners"
+  blueprint  = port-labs_blueprint.Check.identifier
+  properties {
+    name  = "description"
+    value = "Is CODEOWNERS file exists within the repository?"
+  }
+  properties {
+    name  = "category"
+    value = "Service Ownership"
+  }
+  relations {
+    identifier = port-labs_entity.Level3.identifier
+    name       = "rank"
+  }
+}
+
 
 resource "port-labs_entity" "snyk-check" {
   title      = "Snyk Check"
@@ -328,7 +331,7 @@ resource "port-labs_entity" "snyk-check" {
   blueprint  = port-labs_blueprint.Check.identifier
   properties {
     name  = "description"
-    value = "Check if the repository have snyk vulnerabilities"
+    value = "Does the service pass all of the snyk vulnerability scans?"
   }
   properties {
     name  = "category"
@@ -338,9 +341,6 @@ resource "port-labs_entity" "snyk-check" {
     identifier = port-labs_entity.Level3.identifier
     name       = "rank"
   }
-  depends_on = [
-    port-labs_entity.Level3,
-  ]
 }
 
 resource "port-labs_entity" "pager-check" {
@@ -349,7 +349,7 @@ resource "port-labs_entity" "pager-check" {
   blueprint  = port-labs_blueprint.Check.identifier
   properties {
     name  = "description"
-    value = "Check if the repository have pagerduty defined"
+    value = "Is pagerduty contain the service?"
   }
   properties {
     name  = "category"
@@ -359,10 +359,44 @@ resource "port-labs_entity" "pager-check" {
     identifier = port-labs_entity.Level3.identifier
     name       = "rank"
   }
-  depends_on = [
-    port-labs_entity.Level2,
-  ]
 }
+
+resource "port-labs_entity" "fast-api-version-check" {
+  title      = "FastApi version Check"
+  identifier = "fast-api-version"
+  blueprint  = port-labs_blueprint.Check.identifier
+  properties {
+    name  = "description"
+    value = "Is fastApi version equals 0.85.2"
+  }
+  properties {
+    name  = "category"
+    value = "Quality"
+  }
+  relations {
+    name       = "rank"
+    identifier = port-labs_entity.Level2.identifier
+  }
+}
+
+resource "port-labs_entity" "docs-check" {
+  title      = "API Docs Check"
+  identifier = "api-docs"
+  blueprint  = port-labs_blueprint.Check.identifier
+  properties {
+    name  = "description"
+    value = "Is Redoc available?"
+  }
+  properties {
+    name  = "category"
+    value = "Documentation"
+  }
+  relations {
+    name       = "rank"
+    identifier = port-labs_entity.Level4.identifier
+  }
+}
+
 
 resource "port-labs_entity" "pager-team-check" {
   title      = "Pager Team Check"
@@ -370,7 +404,7 @@ resource "port-labs_entity" "pager-team-check" {
   blueprint  = port-labs_blueprint.Check.identifier
   properties {
     name  = "description"
-    value = "Check if the repository have pagerduty team defined"
+    value = "Is the service within pagerduty has a team owner?"
   }
   properties {
     name  = "category"
@@ -380,9 +414,6 @@ resource "port-labs_entity" "pager-team-check" {
     identifier = port-labs_entity.Level2.identifier
     name       = "rank"
   }
-  depends_on = [
-    port-labs_entity.Level2,
-  ]
 }
 
 resource "port-labs_entity" "sentry-check" {
@@ -391,7 +422,7 @@ resource "port-labs_entity" "sentry-check" {
   blueprint  = port-labs_blueprint.Check.identifier
   properties {
     name  = "description"
-    value = "Check if the repository have sentry installed"
+    value = "Is sentry installed on the service?"
   }
   properties {
     name  = "category"
@@ -401,9 +432,6 @@ resource "port-labs_entity" "sentry-check" {
     identifier = port-labs_entity.Level5.identifier
     name       = "rank"
   }
-  depends_on = [
-    port-labs_entity.Level5,
-  ]
 }
 
 resource "port-labs_entity" "linked-issues-check" {
@@ -412,7 +440,7 @@ resource "port-labs_entity" "linked-issues-check" {
   blueprint  = port-labs_blueprint.Check.identifier
   properties {
     name  = "description"
-    value = "Check if the repository have open GitHub issues"
+    value = "Does the service have linked GitHub issues?"
   }
   properties {
     name  = "category"
@@ -422,9 +450,6 @@ resource "port-labs_entity" "linked-issues-check" {
     name       = "rank"
     identifier = port-labs_entity.Level4.identifier
   }
-  depends_on = [
-    port-labs_entity.Level5,
-  ]
 }
 resource "port-labs_entity" "repository-service" {
   title      = "port-service-maturity-example" // Put here the repository name of the service
@@ -435,8 +460,5 @@ resource "port-labs_entity" "repository-service" {
     name  = "repo"
     value = "https://github.com/port-labs/port-service-maturity-example"
   }
-
-  depends_on = [
-    port-labs_blueprint.Service,
-  ]
 }
+

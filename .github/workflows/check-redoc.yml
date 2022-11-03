@@ -1,0 +1,43 @@
+name: Check if service has redoc
+
+on:
+  workflow_call:
+    secrets: 
+      PORT_CLIENT_ID: 
+        required: true
+      PORT_CLIENT_SECRET: 
+        required: true
+jobs:
+  pager:
+    runs-on: ubuntu-latest
+    steps:
+     - run: |
+            echo ::set-output name=redoc::$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/redoc | grep 200)
+       id: redoc
+     - name: "Determine status"
+       id: determine-status
+       run: |
+        if [ -z "${{ steps.redoc.outputs.redoc }}" ]; then
+          echo "::set-output name=status::failure"
+        else
+          echo "::set-output name=status::success"
+        fi
+     - name: "Update check run result"
+       uses: port-labs/port-github-action@v1
+       with:
+         clientId: ${{ secrets.PORT_CLIENT_ID }}
+         clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
+         title: pager-${{ github.event.repository.name }}
+         blueprint: CheckRun
+         properties: |
+           {
+              "status": "${{ steps.determine-status.outputs.status }}",
+              "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+              "buildId": "${{ github.run_id }}"
+           }
+         relations: |
+           {
+             "service": "${{ github.event.repository.name }}",
+             "check": "api-docs"
+           } 
+        
