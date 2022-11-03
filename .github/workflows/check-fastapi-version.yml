@@ -19,7 +19,7 @@ jobs:
      - name: "Determine status"
        id: determine-status
        run: |
-        if [ "${{ steps.is-using-sentry.outputs.fastapi-version }}" = "0.85.2" ]; then
+        if [ "${{ steps.check-contents.outputs.fastapi-version }}" = "0.85.2" ]; then
           echo "::set-output name=status::success"
         else
           echo "::set-output name=status::failure"
