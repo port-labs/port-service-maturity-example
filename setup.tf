@@ -308,7 +308,7 @@ resource "port-labs_entity" "readme-check" {
 
 resource "port-labs_entity" "codewoners-check" {
   title      = "CODEOWNERS Check"
-  identifier = "codewoners"
+  identifier = "codeowners"
   blueprint  = port-labs_blueprint.Check.identifier
   properties {
     name  = "description"

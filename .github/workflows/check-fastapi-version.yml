@@ -40,6 +40,6 @@ jobs:
          relations: |
            {
              "service": "${{ github.event.repository.name }}",
-             "check": "fastapi-version"
+             "check": "fast-api-version"
            } 
         
