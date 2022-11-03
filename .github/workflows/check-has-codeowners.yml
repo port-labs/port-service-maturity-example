@@ -16,7 +16,7 @@ jobs:
        id: is-codeowners-exist
        uses: andstor/file-existence-action@v1
        with:
-        files: "CODEWONERS"
+        files: "CODEOWNERS"
      - name: "Determine status"
        id: determine-status
        run: |
